@@ -1,0 +1,22 @@
+plugins {
+    id 'java-library'
+}
+
+def preJPA = new File(sourceSets.main.output.classesDirs.singleFile.parentFile, 'pre-jpa')
+
+tasks.create('myWeavingTask') {
+    inputs.dir(preJPA)
+    outputs.dir(sourceSets.main.output.classesDirs.singleFile)
+    doLast {
+        //Fake the work of the weaver
+        def contents = new File(preJPA, 'Main2.class').bytes
+        sourceSets.main.output.classesDirs.singleFile.mkdirs()
+        def outputFile = new File(sourceSets.main.output.classesDirs.singleFile, 'Main2.class')
+        outputFile << contents
+    }
+}
+
+tasks.getByName('compileJava') {
+    destinationDirectory = preJPA
+    finalizedBy tasks.getByName('myWeavingTask')
+}
