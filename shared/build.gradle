@@ -20,3 +20,7 @@ tasks.getByName('compileJava') {
     destinationDirectory = preJPA
     finalizedBy tasks.getByName('myWeavingTask')
 }
+
+tasks.getByName('classes') {
+    dependsOn tasks.getByName('myWeavingTask')
+}
